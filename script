@@ -1,0 +1,42 @@
+@echo off
+setlocal enabledelayedexpansion
+
+REM ==== Entrada: línea CSV pasada como parámetro ====
+REM %1 contiene algo como:
+REM Juan,Perez,Contabilidad,Contable,Grupo,PerfilPath,LoginScript,HomeDir
+
+for /f "tokens=1-8 delims=," %%a in ("%~1") do (
+    set Nombre=%%a
+    set Apellido=%%b
+    set Depto=%%c
+    set Cargo=%%d
+    set Grupo=%%e
+    set PerfilPath=%%f
+    set LogonScript=%%g
+    set HomeDir=%%h
+)
+
+REM ==== Construimos usuario ====
+set UserName=%Nombre%.%Apellido%
+set DN="CN=%Nombre% %Apellido%,OU=%Depto%,DC=tuempresa,DC=local"
+
+echo Creando usuario %UserName%...
+
+dsadd user %DN% ^
+ -samid "%UserName%" ^
+ -fn "%Nombre%" ^
+ -ln "%Apellido%" ^
+ -display "%Nombre% %Apellido%" ^
+ -dept "%Depto%" ^
+ -title "%Cargo%" ^
+ -profile "%PerfilPath%" ^
+ -loscr "%LogonScript%" ^
+ -hmdir "%HomeDir%" ^
+ -hmdrv H: ^
+ -pwd "Cambiar123" -mustchpwd yes -disabled no
+
+REM ==== Añadir a grupo ====
+dsmod group "CN=%Grupo%,OU=Grupos,DC=tuempresa,DC=local" -addmbr %DN%
+
+echo Usuario creado correctamente.
+endlocal
