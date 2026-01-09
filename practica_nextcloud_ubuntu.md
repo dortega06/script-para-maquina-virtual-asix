@@ -385,10 +385,10 @@ CREATE DATABASE nextcloud;
 ```
 
 ```sql
-CREATE USER 'nextclouduser'@'localhost' IDENTIFIED BY 'password_seguro';
+CREATE USER 'nextclouduser'@'localhost' IDENTIFIED BY 'Nextcl0ud2024!';
 ```
 
-**Nota**: Cambia `'password_seguro'` por una contraseña fuerte de tu elección (¡anótala!).
+**Nota**: Cambia `'Nextcl0ud2024!'` por una contraseña fuerte de tu elección que incluya mayúsculas, minúsculas, números y símbolos (¡anótala!).
 
 ```sql
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextclouduser'@'localhost';
@@ -430,21 +430,27 @@ php -v
 
 3. Configura PHP para Nextcloud:
 
-Edita el archivo de configuración de PHP:
+Edita el archivo de configuración de PHP. Primero, verifica la versión instalada:
+
+```bash
+ls /etc/php/
+```
+
+Luego edita el archivo usando la versión correcta (ejemplo con 8.1):
 
 ```bash
 sudo nano /etc/php/8.1/apache2/php.ini
 ```
 
-**Nota**: La versión puede variar (8.1, 8.2, etc.). Usa la versión que se instaló.
+**Nota**: Reemplaza `8.1` con la versión que aparece en tu sistema (puede ser 8.1, 8.2, 8.3, etc.).
 
 4. Busca y modifica las siguientes líneas (usa `Ctrl+W` para buscar):
 
 ```ini
-memory_limit = 512M
-upload_max_filesize = 500M
-post_max_size = 500M
-max_execution_time = 300
+memory_limit = 512M           ; Permite operaciones con archivos grandes
+upload_max_filesize = 500M    ; Tamaño máximo de archivos individuales
+post_max_size = 500M          ; Tamaño máximo de datos POST
+max_execution_time = 300      ; Evita timeouts en subidas grandes
 ```
 
 **[CAPTURA] CAPTURA 31**: Archivo php.ini abierto con los parámetros modificados.
@@ -736,6 +742,8 @@ sudo nano /var/www/html/nextcloud/config/config.php
   ),
 ```
 
+**Nota**: Reemplaza `[TU_IP_DEL_SERVIDOR]` con tu IP real sin corchetes, por ejemplo: `'192.168.1.100'` (mantén las comillas simples).
+
 **[CAPTURA] CAPTURA 47**: Configuración de dominios confiables actualizada.
 
 7. Guarda y cierra
@@ -828,6 +836,8 @@ sudo nano /etc/apache2/sites-available/nextcloud.conf
     Redirect permanent / https://[TU_IP_DEL_SERVIDOR]/
 ```
 
+**Importante**: Reemplaza `[TU_IP_DEL_SERVIDOR]` con tu dirección IP real, eliminando los corchetes. Por ejemplo: `https://192.168.1.100/`
+
 **[CAPTURA] CAPTURA 51**: Configuración HTTP con redirección a HTTPS.
 
 6. Guarda y cierra
@@ -865,6 +875,8 @@ sudo nano /var/www/html/nextcloud/config/config.php
 ```php
   'overwrite.cli.url' => 'https://[TU_IP_DEL_SERVIDOR]',
 ```
+
+**Nota**: Reemplaza `[TU_IP_DEL_SERVIDOR]` con tu IP real sin corchetes, manteniendo las comillas. Ejemplo: `'https://192.168.1.100'`
 
 3. Guarda y cierra
 
